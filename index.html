@@ -1,0 +1,1268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#283d35">
+<title>观爻 · 六爻小程序</title>
+<style>
+:root{
+  --paper:#f5f2e9;--card:#fffdf8;--ink:#26382f;
+  --muted:#6b746b;--line:#dedfd4;--accent:#a54e32;--sage:#e7eee6
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",
+  "PingFang SC","Microsoft YaHei",sans-serif
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible,
+select:focus-visible,textarea:focus-visible{
+  outline:3px solid #bc8860;outline-offset:3px
+}
+main{max-width:1120px;margin:auto;padding:24px 22px 70px}
+header{
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--line);padding-bottom:18px
+}
+.seal{
+  display:grid;place-items:center;background:var(--ink);
+  color:var(--paper);width:42px;height:42px;
+  border-radius:10px;font:27px serif
+}
+.brand{font-size:21px;font-weight:650;letter-spacing:3px}
+.sub{color:var(--muted);font-size:12px;margin-left:auto}
+h1{
+  font:clamp(30px,5vw,46px)/1.4 "Songti SC","SimSun",serif;
+  letter-spacing:2px;margin:30px 0 12px
+}
+h2{font-size:19px;margin:0 0 14px}
+h3{font-size:16px;margin:0 0 6px}
+p{margin:8px 0 16px}
+.lead{max-width:700px;color:var(--muted);margin-bottom:24px}
+.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:20px}
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:24px;margin-bottom:20px
+}
+.head{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:8px
+}
+.eyebrow{
+  font-size:12px;letter-spacing:2px;
+  color:var(--accent);margin-bottom:8px
+}
+.note,small{font-size:12px;color:var(--muted)}
+.note{line-height:1.8}
+label{
+  display:block;font-size:13px;
+  color:var(--muted);margin:12px 0 6px
+}
+input,select,textarea{
+  max-width:100%;border:1px solid var(--line);
+  border-radius:9px;background:#fff;padding:10px;color:var(--ink)
+}
+input,textarea{width:100%}
+textarea{resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1}
+.btn{
+  border:1px solid var(--line);border-radius:10px;
+  padding:10px 15px;background:transparent;color:var(--ink)
+}
+.primary{background:var(--ink);border-color:var(--ink);color:white}
+.light{background:var(--sage);border-color:var(--sage)}
+.linkbtn{
+  border:0;background:none;color:var(--accent);
+  padding:5px 0;font-size:13px
+}
+.coinrow{display:flex;gap:16px;justify-content:center;margin:24px 0 14px}
+.coin{
+  border:2px solid #d6c7a2;background:#f6efda;
+  width:94px;height:94px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;box-shadow:inset 0 0 0 5px #fff8e9;
+  color:#866e3d
+}
+.coin b{font:30px serif}
+.coin small{font-size:11px;color:inherit}
+.coin.word{
+  background:#e4ece4;border-color:#9eafa0;color:#314b38;
+  box-shadow:inset 0 0 0 5px #f0f5ef
+}
+.coin.flower{background:#f4e5d4;color:#9b5432}
+.center{text-align:center}
+.entry{
+  display:grid;grid-template-columns:1fr 75px 120px;
+  gap:12px;align-items:center;
+  border-bottom:1px solid #ebece5;min-height:52px
+}
+.entry>span:first-child{font-size:13px}
+.entry select{padding:5px;width:120px}
+.yao{
+  width:92px;display:inline-flex;vertical-align:middle;
+  gap:14px;height:9px
+}
+.yao i{
+  background:var(--ink);height:9px;flex:1;border-radius:1px
+}
+.yao.yang{gap:0}
+.yao.yang i:last-child{display:none}
+.yao.active i{background:var(--accent)}
+.yao.pending i{background:#e4e7df}
+.yao.small{width:66px;height:7px;gap:10px}
+.yao.small i{height:7px}
+.yao.small.yang{gap:0}
+details{
+  border-top:1px solid var(--line);
+  padding-top:13px;margin-top:18px
+}
+summary{cursor:pointer;color:var(--muted);font-size:13px}
+.resultHeads{
+  display:grid;grid-template-columns:1fr 30px 1fr;
+  gap:12px;align-items:center;margin:16px 0 22px
+}
+.resultHeads h2{font:clamp(21px,3vw,30px) serif;margin:5px 0}
+.arrow{text-align:center;color:var(--accent);font-size:24px}
+.calendar{
+  background:var(--sage);padding:12px;
+  border-radius:10px;font-size:13px
+}
+.tablewrap{overflow:auto;margin:20px -5px 12px}
+table{
+  border-collapse:collapse;width:100%;
+  min-width:790px;text-align:center
+}
+th{font-size:12px;color:var(--muted);font-weight:500}
+td,th{padding:12px 6px;border-bottom:1px solid #e7e8e0}
+td{font-size:13px}
+.move{color:var(--accent);font-weight:bold}
+.badge{
+  background:var(--ink);color:white;
+  border-radius:5px;padding:3px 6px;font-size:11px
+}
+.badge.pale{background:#e7d5be;color:#654c2f}
+.hiddenSpirit{display:block;color:var(--accent)}
+.simple{background:#f1f4ed;padding:18px 22px;border-radius:12px}
+.simple p:last-child{margin-bottom:0}
+a{color:#4b6951;text-underline-offset:4px}
+.links{display:flex;flex-wrap:wrap;gap:20px;font-size:13px}
+#detail{margin-top:20px;border-top:1px solid var(--line)}
+#detail article{padding:17px 0;border-bottom:1px solid var(--line)}
+#detail p{margin:6px 0;line-height:1.95}
+.historyItem{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;border:0;border-bottom:1px solid var(--line);
+  background:transparent;padding:12px 0;width:100%;
+  text-align:left;color:var(--ink)
+}
+#status{
+  position:sticky;bottom:10px;max-width:850px;margin:16px auto 0;
+  background:#e7eee6ef;border:1px solid #d7dfd1;
+  padding:10px 15px;border-radius:10px;font-size:13px;min-height:45px
+}
+footer{color:var(--muted);font-size:12px;margin-top:24px}
+#termWarning{color:var(--accent)}
+[hidden]{display:none!important}
+@media(max-width:740px){
+  main{padding:18px 14px 35px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .card{padding:19px 16px;border-radius:14px}
+  .sub{font-size:10px}
+  .coin{width:84px;height:84px}
+  .entry{grid-template-columns:1fr 65px 112px;gap:6px}
+  .entry select{width:112px}
+  .resultHeads{gap:6px;grid-template-columns:1fr 20px 1fr}
+  .historyItem{align-items:flex-start;flex-direction:column;gap:1px}
+  h1{margin-top:24px}
+  .resultHeads small{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="seal" aria-hidden="true">爻</div>
+  <div class="brand">观爻</div>
+  <span class="sub">三枚硬币 · 六次记录</span>
+</header>
+
+<h1>一爻一爻，<br>看见变化的线索。</h1>
+<p class="lead">
+  先记录，再观卦，最后问事。按“花繁为阴、字简为阳”起卦，
+  自动排本卦、变卦、世应、六亲与六神。
+</p>
+
+<div class="layout" id="input">
+<section class="card">
+  <div class="eyebrow">01 / 记录硬币</div>
+  <div class="head">
+    <h2 id="throwTitle">第1次 · 初爻</h2>
+    <span class="badge" id="progress">0 / 6</span>
+  </div>
+  <p class="note">
+    每次三枚，连续六次，从下往上。花＝阴＝2；字＝阳＝3。
+    点击硬币切换，也可直接选择爻值。
+  </p>
+  <div class="coinrow" id="coinButtons"></div>
+  <p class="center note" id="coinSum" aria-live="polite"></p>
+  <div class="row">
+    <button class="btn primary" id="commit">记下这一爻</button>
+    <button class="btn" id="simulate">模拟一次</button>
+  </div>
+  <p class="note">模拟仅用于体验；录入真实硬币时无需点击模拟。</p>
+
+  <label for="when">起卦时间 · 北京时间 UTC+8</label>
+  <input id="when" type="datetime-local"
+    min="1901-01-01T00:00" max="2099-12-31T23:59" required>
+
+  <details>
+    <summary>时间与排盘设置</summary>
+    <label for="roll">日辰换日口径</label>
+    <select id="roll">
+      <option value="0">0时换日（默认）</option>
+      <option value="23">23时子初换日</option>
+    </select>
+    <label for="monthFix">月建校正</label>
+    <select id="monthFix"></select>
+    <label for="dayFix">日柱校正</label>
+    <select id="dayFix"></select>
+    <p class="note">
+      年以立春、月以十二“节”为界，月建按太阳视黄经近似推算。
+      交节附近请核对历书并手动校正。范围1901—2099年，
+      不作真太阳时修正。日柱校正会同时改变六神与旬空。
+    </p>
+  </details>
+</section>
+
+<section class="card">
+  <div class="eyebrow">记录从初爻开始 · 图形从上爻显示</div>
+  <h2>六次记录</h2>
+  <div id="entryLines"></div>
+  <p class="note">
+    6 老阴 × → 阳；7 少阳不变；8 少阴不变；9 老阳 ○ → 阴。
+  </p>
+  <div class="row">
+    <button class="btn primary" id="generate" disabled>
+      排卦 · 看简单解析
+    </button>
+    <button class="btn" id="undo">撤回一爻</button>
+  </div>
+  <div class="head" style="margin-top:14px">
+    <button class="linkbtn" id="example">载入“否之涣”示例</button>
+    <button class="linkbtn" id="reset">重新起卦</button>
+  </div>
+</section>
+</div>
+
+<section class="card" id="result" hidden>
+  <div class="eyebrow">02 / 观卦</div>
+  <div class="calendar" id="calendar"></div>
+  <p class="note" id="termWarning" hidden>
+    当前接近交节时刻，请核对月建，必要时使用校正设置。
+  </p>
+  <div class="resultHeads">
+    <div>
+      <small>本卦</small>
+      <h2 id="baseTitle"></h2>
+      <small id="baseMeta"></small>
+    </div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div>
+      <small>变卦</small>
+      <h2 id="changeTitle"></h2>
+      <small id="changeMeta"></small>
+    </div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>六神</th><th>爻位</th><th>六亲 · 纳甲</th>
+        <th>本卦</th><th>世应</th><th>动</th>
+        <th>变卦</th><th>变卦六亲 · 纳甲</th><th>日月标记</th>
+      </tr></thead>
+      <tbody id="chartBody"></tbody>
+    </table>
+  </div>
+  <p class="note">
+    手机可左右滑动表格。红色为动爻。变卦六亲仍以本卦宫五行为基准；
+    静爻所示变卦纳甲仅供查表。本次世应以本卦为准。
+  </p>
+
+  <div class="simple" id="simple"></div>
+
+  <div class="eyebrow" style="margin-top:28px">03 / 问事</div>
+  <h2>把卦放回你关心的问题</h2>
+
+  <div class="row">
+    <div>
+      <label for="topic">问题大类</label>
+      <select id="topic">
+        <option>事业</option><option>感情</option>
+        <option>学业考试</option><option>财务</option>
+        <option>合作</option><option>日常选择</option>
+      </select>
+    </div>
+    <div id="loveField" hidden>
+      <label for="loveMode">感情取用方式</label>
+      <select id="loveMode">
+        <option value="应">双方关系：以应爻观察对方</option>
+        <option value="官鬼">伴侣角色：以官鬼取用</option>
+        <option value="妻财">伴侣角色：以妻财取用</option>
+      </select>
+    </div>
+  </div>
+
+  <label for="question">心中所问 · 可选，最多500字</label>
+  <textarea id="question" rows="3" maxlength="500"
+    placeholder="例如：接下来如何看待求职与备考这两条路？"></textarea>
+  <p class="note">
+    详细解析由卦盘与所选类别生成；文字问题仅作为记录，
+    不会被发送或进行语义分析。
+  </p>
+  <button class="btn primary" id="analyze">查看详细解析</button>
+  <div id="detail" hidden></div>
+
+  <div class="row" style="margin-top:22px">
+    <button class="btn light" id="save">保存这一卦</button>
+    <button class="btn" id="copy">复制记录</button>
+    <button class="btn" id="download">下载文本</button>
+  </div>
+  <textarea id="copyText" rows="8" hidden
+    aria-label="可复制的解卦记录"></textarea>
+</section>
+
+<section class="card">
+  <div class="head">
+    <h2>我的卦例</h2>
+    <button class="linkbtn" id="clearHistory">清空历史</button>
+  </div>
+  <div id="history"></div>
+</section>
+
+<details class="card">
+  <summary>方法、依据与使用说明</summary>
+  <p class="note">
+    本程序约定：花2、字3。三花老阴6，两花一字少阳7，
+    一花两字少阴8，三字老阳9。
+    不同资料对硬币两面的称呼可能不同，请始终使用同一约定。
+  </p>
+  <p class="note">
+    八宫定世应，按内外卦纳甲，以本卦宫五行定六亲；
+    六神按日干装配。缺失六亲从本宫纯卦同位查伏神。
+    动爻阅读建议参考朱熹一系。简析涵盖六十四卦；
+    详细解析为规则式说明，不包含完整旺衰、三合局、应期
+    或原典逐爻注疏，不输出确定的吉凶与成败概率。
+  </p>
+  <p class="note">
+    离线可排盘和解读；原典链接需联网。
+    记录仅保存在当前浏览器，清除浏览器数据可能丢失，
+    可下载文本留存。网页不会上传问题。
+  </p>
+  <div class="links">
+    <a href="https://www.quanxue.cn/qt_mingxiang/boshi/boshi07.html"
+      target="_blank" rel="noopener noreferrer">
+      《卜筮正宗》纳甲与世应 ↗
+    </a>
+    <a href="https://www.eee-learning.com/"
+      target="_blank" rel="noopener noreferrer">《周易》原文参考 ↗</a>
+  </div>
+</details>
+
+<footer>
+  传统文化学习与自我梳理。卦象提供思考角度，不确定未来；
+  重要选择仍需依据现实信息。
+</footer>
+<div id="status" role="status" aria-live="polite">
+  准备三枚硬币，从初爻开始。
+</div>
+</main>
+
+<script>
+"use strict";
+
+/* ---------- 排盘数据 ---------- */
+
+const G="甲乙丙丁戊己庚辛壬癸";
+const Z="子丑寅卯辰巳午未申酉戌亥";
+const E="木火土金水";
+const BE=[4,2,0,0,2,1,1,2,3,3,2,4];
+const HE=[1,0,11,10,9,8,7,6,5,4,3,2];
+const SH=["青龙","朱雀","勾陈","螣蛇","白虎","玄武"];
+const START=[0,0,1,1,2,3,4,4,5,5];
+
+/* 三位二进制从下往上：坤0、震1、坎2、兑3、
+   艮4、离5、巽6、乾7。 */
+const TRI=[
+ ["坤","地",2,"乙","癸",[7,5,3,1,11,9]],
+ ["震","雷",0,"庚","庚",[0,2,4,6,8,10]],
+ ["坎","水",4,"戊","戊",[2,4,6,8,10,0]],
+ ["兑","泽",3,"丁","丁",[5,3,1,11,9,7]],
+ ["艮","山",2,"丙","丙",[4,6,8,10,0,2]],
+ ["离","火",1,"己","己",[3,1,11,9,7,5]],
+ ["巽","风",0,"辛","辛",[1,11,9,7,5,3]],
+ ["乾","天",3,"甲","壬",[0,2,4,6,8,10]]
+];
+
+/* 卦名、上卦、下卦、编写的白话卦义概述。 */
+const RAW=[
+ ["乾",7,7,"健行与自强。积极推进时也要留有余地。"],
+ ["坤",0,0,"承载与配合。建立基础，辨清自己愿意承担的责任。"],
+ ["屯",2,1,"初起多阻。先建立秩序，寻找支持，再逐步推进。"],
+ ["蒙",4,2,"认识尚未清楚。先提问、学习与核实，不急于下结论。"],
+ ["需",2,7,"有所等待。准备条件，辨认何时具备行动依据。"],
+ ["讼",7,2,"分歧与争执。厘清事实和边界，避免把分歧推到极端。"],
+ ["师",0,2,"组织与纪律。明确目标、分工和负责的人。"],
+ ["比",2,0,"亲近与联合。慎选同伴，建立可靠的连接。"],
+ ["小畜",6,7,"积蓄尚小。先处理可控细节，循序积累。"],
+ ["履",7,3,"行动涉及分寸。看清规则与位置，谨慎前行。"],
+ ["泰",0,7,"上下交流。珍惜合作，也持续维护已有基础。"],
+ ["否",7,0,"上下不通、推进受阻。先辨认堵点，守住原则，寻找接应。"],
+ ["同人",7,5,"共同目标与合作。走出小圈子，在清楚的原则下同行。"],
+ ["大有",5,7,"资源与责任并存。合理分配已有条件，避免自满。"],
+ ["谦",0,4,"谦逊与适度。承认边界，同时让能力得到恰当表达。"],
+ ["豫",1,0,"动员与预备。把热情落实为准备，避免松懈。"],
+ ["随",3,1,"顺应变化。可以调整方式，但应保留判断。"],
+ ["蛊",4,6,"旧问题需要整治。追溯原因，修补长期积累的疏漏。"],
+ ["临",0,3,"接近与照顾。主动了解实际情况，也注意时势变化。"],
+ ["观",6,0,"观察与自省。扩大视野，先看清再行动。"],
+ ["噬嗑",5,1,"障碍需要处理。厘清规则，逐项解决卡住的环节。"],
+ ["贲",4,5,"形式与表达。改善呈现，同时保留实质。"],
+ ["剥",4,0,"基础有所削弱。减少消耗，保护仍可依靠的条件。"],
+ ["复",0,1,"回返与重新开始。从小而稳的恢复入手。"],
+ ["无妄",7,1,"真诚与合宜。依据事实行动，避免侥幸和强求。"],
+ ["大畜",4,7,"积累与约束。储备能力，让力量用在合适的方向。"],
+ ["颐",4,1,"滋养与供给。关注输入、表达以及长期支持来源。"],
+ ["大过",3,6,"负担超出常态。检查承受力，必要时调整结构。"],
+ ["坎",2,2,"险阻与反复。守住方法和边界，小步验证。"],
+ ["离",5,5,"明辨与依托。看清信息，也选择可靠的依靠。"],
+ ["咸",3,4,"感应与回应。留意真实互动，尊重彼此节奏。"],
+ ["恒",1,6,"持续与稳定。检验日常能否长期坚持。"],
+ ["遁",7,4,"退避与保全。适时拉开距离，为选择保留空间。"],
+ ["大壮",1,7,"力量增强。越有冲劲，越需要分寸与正当依据。"],
+ ["晋",5,0,"进展与显现。让成果被看见，稳步争取支持。"],
+ ["明夷",0,5,"光明暂受遮蔽。保护自己，保留判断和能力。"],
+ ["家人",6,5,"内部秩序。明确角色、责任和沟通方式。"],
+ ["睽",5,3,"立场不同。承认差异，在有限共识上协作。"],
+ ["蹇",2,4,"前行遇阻。检查路径，寻找援助，必要时绕行。"],
+ ["解",1,2,"紧张有所松解。及时处理遗留问题，减少纠缠。"],
+ ["损",4,3,"减省与取舍。辨认什么值得投入，什么可以放下。"],
+ ["益",6,1,"增益与相助。把支持用到关键处，也考虑彼此受益。"],
+ ["夬",3,7,"决断与公开表达。明确立场，行动仍需克制。"],
+ ["姤",7,6,"相遇与突来的因素。看清边界，不因新鲜而仓促承诺。"],
+ ["萃",3,0,"聚集与整合。建立共同目标，让资源有序汇合。"],
+ ["升",0,6,"逐步上升。积累可信的小进展，借助适当支持。"],
+ ["困",3,2,"条件受限。节省心力，守住仍能行动的部分。"],
+ ["井",2,6,"稳定的供给与基础。修整方法，让已有能力真正可用。"],
+ ["革",3,5,"改变既有安排。先确认理由与条件，再推进变革。"],
+ ["鼎",5,6,"更新与承载。把材料、能力和分工组织成可持续的结构。"],
+ ["震",1,1,"震动与启动。先稳住，再分辨变化带来的任务。"],
+ ["艮",4,4,"止与边界。知道何时停下，避免无效消耗。"],
+ ["渐",6,4,"循序渐进。尊重过程，用稳定行动建立信任。"],
+ ["归妹",1,3,"位置与时机未必适配。慎重看待仓促结合和承诺。"],
+ ["丰",1,5,"事情繁盛、信息增多。及时辨明重点，也注意盛衰变化。"],
+ ["旅",5,4,"暂居与过渡。保持灵活，照顾好基本条件。"],
+ ["巽",6,6,"渐入与沟通。温和持续地推进，也避免摇摆。"],
+ ["兑",3,3,"交流与悦纳。以真诚沟通，别让讨好代替判断。"],
+ ["涣",6,2,"疏解与离散。松开僵局，同时寻找重新凝聚的中心。"],
+ ["节",2,3,"节制与边界。建立可持续的限度，避免过度压抑。"],
+ ["中孚",6,3,"诚信与内在一致。让表达、行动和承诺相互对应。"],
+ ["小过",1,4,"适度调整、留意细节。小事认真，不宜过度伸展。"],
+ ["既济",2,5,"已有阶段性完成。继续维护，防止忽略后续问题。"],
+ ["未济",5,2,"尚未完成、仍在过渡。检查衔接，稳妥走完余下步骤。"]
+];
+
+const HEX=new Map(
+ RAW.map((r,i)=>[
+  r[2]+8*r[1],
+  {name:r[0],up:r[1],down:r[2],meaning:r[3],no:i+1}
+ ])
+);
+
+/* 八宫依次变初、二、三、四、五；
+   游魂变回第四，归魂变回内卦。 */
+const PAL=new Map();
+for(let t=0;t<8;t++){
+ let m=t*9;
+ for(let stage=0;stage<8;stage++){
+  if(stage>0&&stage<=5)m^=1<<(stage-1);
+  if(stage===6)m^=8;
+  if(stage===7)m^=7;
+  PAL.set(m,{
+   t,stage,
+   shi:[5,0,1,2,3,4,3,2][stage],
+   label:["本宫","一世","二世","三世","四世","五世","游魂","归魂"][stage]
+  });
+ }
+}
+
+const mod=(n,m)=>(n%m+m)%m;
+const kin=(e,p)=>
+ e===p?"兄弟":
+ mod(p+1,5)===e?"子孙":
+ mod(e+1,5)===p?"父母":
+ mod(p+2,5)===e?"妻财":"官鬼";
+
+const mask=v=>v.reduce((m,n,i)=>m|((n%2)<<i),0);
+const transform=v=>v.map(n=>n===6?7:n===9?8:n);
+
+function title(m){
+ let h=HEX.get(m);
+ return h.up===h.down
+  ?TRI[h.up][0]+"为"+TRI[h.up][1]
+  :TRI[h.up][1]+TRI[h.down][1]+h.name;
+}
+
+function position(i){
+ return ["初爻","二爻","三爻","四爻","五爻","上爻"][i];
+}
+
+function najia(m,p){
+ let low=TRI[m&7],high=TRI[m>>3];
+ return Array.from({length:6},(_,i)=>{
+  let tr=i<3?low:high,z=tr[5][i];
+  return {
+   i,z,e:BE[z],gan:tr[i<3?3:4],
+   kin:kin(BE[z],p),
+   label:tr[i<3?3:4]+Z[z]+E[BE[z]]
+  };
+ });
+}
+
+/* 太阳视黄经近似，用于节月。交节附近允许手动校正。 */
+function solarLongitude(ms){
+ let t=(ms/86400000+2440587.5-2451545)/36525;
+ let L=mod(280.46646+36000.76983*t+0.0003032*t*t,360);
+ let M=(357.52911+35999.05029*t-0.0001537*t*t)*Math.PI/180;
+ let C=(1.914602-0.004817*t-0.000014*t*t)*Math.sin(M)
+  +(0.019993-0.000101*t)*Math.sin(2*M)
+  +0.000289*Math.sin(3*M);
+ return mod(
+  L+C-0.00569-0.00478*Math.sin(
+   (125.04-1934.136*t)*Math.PI/180
+  ),360
+ );
+}
+
+function calendar(input,roll="0",manualMonth="",manualDay=""){
+ if(!/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(input))
+  throw Error("请填写完整的北京时间");
+
+ let [y,m,d,h,min]=input.match(/\d+/g).map(Number);
+ if(y<1901||y>2099||m<1||m>12||h>23||min>59)
+  throw Error("时间范围为1901—2099年");
+
+ const civil=Date.UTC(y,m-1,d);
+ if(new Date(civil).getUTCMonth()!==m-1||d<1)
+  throw Error("日期无效");
+
+ const ms=civil+h*3600000+min*60000-8*3600000;
+ let lon=solarLongitude(ms);
+ let sector=Math.floor(mod(lon-315,360)/30);
+ let yy=y-((m<=2&&lon<315)?1:0);
+ let ys=mod(yy-4,10),yz=mod(yy-4,12);
+ let mz=mod(sector+2,12);
+ let mg=mod(2*(ys%5)+2+sector,10);
+
+ if(manualMonth!==""){
+  mz=Number(manualMonth);
+  mg=mod(2*(ys%5)+2+mod(mz-2,12),10);
+ }
+
+ /* 2000-01-07 为甲子日。 */
+ let day=mod(
+  Math.round((civil-Date.UTC(2000,0,7))/86400000)
+  +(roll==="23"&&h===23?1:0),60
+ );
+ if(manualDay!=="")day=Number(manualDay);
+
+ let ds=day%10,dz=day%12;
+ let hz=Math.floor((h+1)/2)%12;
+ let hs=(2*(ds%5)+hz)%10;
+ let xun=mod(dz-day%10,12);
+ let empty=[mod(xun+10,12),mod(xun+11,12)];
+
+ return {
+  year:G[ys]+Z[yz],month:G[mg]+Z[mz],
+  day:G[ds]+Z[dz],hour:G[hs]+Z[hz],
+  ds,dz,mz,empty,
+  nearTerm:Math.min(
+   mod(lon-315,30),30-mod(lon-315,30)
+  )<0.03
+ };
+}
+
+function chart(v,time,roll="0",mm="",dd=""){
+ if(v.length!==6||v.some(n=>![6,7,8,9].includes(n)))
+  throw Error("请先记录完整六爻");
+
+ const m=mask(v),b=mask(transform(v));
+ const pal=PAL.get(m),p=TRI[pal.t][2];
+ const cal=calendar(time,roll,mm,dd);
+ const base=najia(m,p),changed=najia(b,p);
+ const present=new Set(base.map(x=>x.kin));
+ const pure=najia(pal.t*9,p);
+ const hidden=pure.filter(x=>!present.has(x.kin));
+
+ return {
+  v,m,b,p,pal,base,changed,hidden,cal,
+  moving:v.flatMap((n,i)=>n===6||n===9?[i]:[]),
+  shi:pal.shi,ying:(pal.shi+3)%6
+ };
+}
+
+function relation(a,b){
+ if(a===b)return E[a]+"与"+E[b]+"比和";
+ if(mod(a+1,5)===b)return E[a]+"生"+E[b];
+ if(mod(b+1,5)===a)return E[b]+"生"+E[a];
+ if(mod(a+2,5)===b)return E[a]+"克"+E[b];
+ return E[b]+"克"+E[a];
+}
+
+function branchRelation(a,b){
+ return a===b?"同支":
+  HE[a]===b?"六合":
+  mod(a-b,12)===6?"六冲":"";
+}
+
+function readingRule(c){
+ let n=c.moving.length;
+ let still=[0,1,2,3,4,5].filter(i=>!c.moving.includes(i));
+ if(n===0)return "无动爻：以本卦卦辞为阅读重点。";
+ if(n===1)return "一爻动：阅读本卦"+position(c.moving[0])+"爻辞。";
+ if(n===2)return "两爻动：兼读本卦两动爻，以"
+  +position(Math.max(...c.moving))+"为主。";
+ if(n===3)return "三爻动：参读本卦与变卦卦辞。";
+ if(n===4)return "四爻动：参读变卦两条不变爻的爻辞，以"
+  +position(Math.min(...still))+"为主。";
+ if(n===5)return "五爻动：阅读变卦唯一不变爻（"
+  +position(still[0])+"）的爻辞。";
+ return c.m===63?"六爻皆变：乾卦参考“用九”。":
+  c.m===0?"六爻皆变：坤卦参考“用六”。":
+  "六爻皆变：以变卦卦辞为阅读重点。";
+}
+
+function timing(x,cal){
+ const tags=[];
+ if(x.z===cal.mz)tags.push("临月建");
+ if(HE[x.z]===cal.mz)tags.push("与月建合");
+ if(mod(x.z-cal.mz,12)===6)tags.push("月冲（月破标记）");
+ if(x.z===cal.dz)tags.push("临日辰");
+ if(HE[x.z]===cal.dz)tags.push("与日辰合");
+ if(mod(x.z-cal.dz,12)===6)tags.push("日冲");
+ if(cal.empty.includes(x.z))tags.push("旬空");
+ return (tags.length?tags.join("、"):
+  "未见同支、六合、六冲或旬空标记")
+  +"；月令五行："+relation(BE[cal.mz],x.e)
+  +"；日辰五行："+relation(BE[cal.dz],x.e);
+}
+
+/* ---------- 界面与解读 ---------- */
+
+const $=id=>document.getElementById(id);
+const NAMES={6:"老阴",7:"少阳",8:"少阴",9:"老阳"};
+const SPIRIT=[
+ "和悦、助力与交流",
+ "表达、文书与争辩",
+ "牵连、停滞与积累",
+ "疑虑、反复与想象",
+ "力度、压力与决断",
+ "隐情、含蓄与不明信息"
+];
+const STAGE=[
+ "事情的开端，先建立基础",
+ "进入实际事务，检查配合与执行",
+ "处于内外衔接，留意进退和压力",
+ "接近外部组织，检查接应和条件",
+ "处于核心位置，关注责任和统筹",
+ "发展到较高阶段，注意收束与转变"
+];
+const TOPICS={
+ "事业":{
+  target:"官鬼",meaning:"职位、任职关系与职业约束",
+  advice:"辨认职位要求、实际回应和可接受的工作内容。官鬼数量不等于录用数量。"
+ },
+ "感情":{
+  target:"应",meaning:"双方互动与对方的位置",
+  advice:"先看真实的沟通、相处与边界。合不等于相爱，冲不等于必分手。"
+ },
+ "学业考试":{
+  target:"父母",meaning:"学习、材料、资格与文书",
+  advice:"区分知识准备、资格要求和结果通知，具体考试还须参看官鬼等因素。"
+ },
+ "财务":{
+  target:"妻财",meaning:"财物、收入与资源",
+  advice:"核对收支与承担能力。本程序不预测收益，也不据卦建议投资。"
+ },
+ "合作":{
+  target:"应",meaning:"合作对象与外部条件",
+  advice:"把分工、约定、交付条件和责任说清楚，不能仅凭世应合冲认定对方态度。"
+ },
+ "日常选择":{
+  target:"世",meaning:"自身处境与行动位置",
+  advice:"把问题缩小到一个具体选择，结合现实条件判断能承担哪一步。"
+ }
+};
+
+let values=Array(6).fill(null);
+let coins=[null,null,null];
+let current=null,history=[],detailReady=false;
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+}[c]));
+
+function say(t){$("status").textContent=t}
+
+function lineHTML(value,small=false){
+ if(value==null)
+  return '<span class="yao pending" aria-label="待记录"><i></i></span>';
+ return '<span class="yao '
+  +(value%2?"yang":"yin")
+  +(value===6||value===9?" active":"")
+  +(small?" small":"")
+  +'" role="img" aria-label="'+NAMES[value]
+  +'"><i></i><i></i></span>';
+}
+
+function options(selected){
+ return '<option value="">待记录</option>'
+  +[6,7,8,9].map(n=>
+   '<option value="'+n+'"'+(n===selected?" selected":"")
+   +'>'+n+' · '+NAMES[n]+'</option>'
+  ).join("");
+}
+
+function renderInput(){
+ let count=values.filter(x=>x!=null).length;
+ let next=values.indexOf(null);
+ $("progress").textContent=count+" / 6";
+ $("throwTitle").textContent=next<0
+  ?"六次已记录完成"
+  :"第 "+(next+1)+" 次 · "+position(next);
+ $("commit").disabled=next<0||coins.some(x=>x==null);
+ $("commit").textContent=next<0?"六爻已齐":"记下这一爻";
+ $("undo").disabled=count===0;
+ $("generate").disabled=count!==6;
+
+ $("coinButtons").innerHTML=coins.map((v,i)=>
+  '<button class="coin '+(v===2?"flower":v===3?"word":"")
+  +'" data-coin="'+i+'" aria-label="第'+(i+1)+'枚：'
+  +(v===2?"花，阴，2":v===3?"字，阳，3":"未选，点击选择花面")
+  +'"'+(next<0?" disabled":"")+'>'
+  +'<b>'+(v===2?"花":v===3?"字":"？")+'</b>'
+  +'<small>'+(v===2?"阴 · 2":v===3?"阳 · 3":"点击选面")
+  +'</small></button>'
+ ).join("");
+
+ $("coinSum").textContent=coins.some(v=>v==null)
+  ?"点击硬币，在花、字之间切换"
+  :coins.join(" + ")+" = "+coins.reduce((a,b)=>a+b,0)
+   +" · "+NAMES[coins.reduce((a,b)=>a+b,0)];
+
+ $("entryLines").innerHTML=[5,4,3,2,1,0].map(i=>
+  '<div class="entry"><span>第'+(i+1)+'次 · '+position(i)
+  +'</span>'+lineHTML(values[i],true)
+  +'<select data-edit="'+i+'" aria-label="修改'+position(i)
+  +'">'+options(values[i])+'</select></div>'
+ ).join("");
+}
+
+function invalidate(){
+ current=null;
+ detailReady=false;
+ $("result").hidden=true;
+ renderInput();
+}
+
+$("coinButtons").addEventListener("click",e=>{
+ let b=e.target.closest("[data-coin]");
+ if(!b)return;
+ let i=Number(b.dataset.coin);
+ coins[i]=coins[i]===2?3:2;
+ renderInput();
+});
+
+$("commit").onclick=()=>{
+ let i=values.indexOf(null);
+ if(i<0||coins.some(v=>v==null))return;
+ values[i]=coins.reduce((a,b)=>a+b,0);
+ coins=[null,null,null];
+ invalidate();
+ say("已记录"+position(i)+"："+NAMES[values[i]]);
+};
+
+$("simulate").onclick=()=>{
+ if(!values.includes(null))return;
+ if(!globalThis.crypto?.getRandomValues){
+  say("当前浏览器不支持模拟，请录入实际投掷结果。");
+  return;
+ }
+ let a=new Uint8Array(3);
+ crypto.getRandomValues(a);
+ coins=Array.from(a,n=>2+(n&1));
+ renderInput();
+ say("模拟结果已显示，点击记下才会加入。");
+};
+
+$("entryLines").onchange=e=>{
+ if(!e.target.matches("[data-edit]"))return;
+ values[Number(e.target.dataset.edit)]=e.target.value===""
+  ?null:Number(e.target.value);
+ coins=[null,null,null];
+ invalidate();
+};
+
+$("undo").onclick=()=>{
+ for(let i=5;i>=0;i--){
+  if(values[i]!=null){values[i]=null;break}
+ }
+ coins=[null,null,null];
+ invalidate();
+ say("已撤回最后一条记录。");
+};
+
+function nowBeijing(){
+ return new Date(Date.now()+8*3600000).toISOString().slice(0,16);
+}
+$("when").value=nowBeijing();
+
+$("monthFix").innerHTML='<option value="">自动推算</option>'
+ +Array.from(Z,(z,i)=>
+  '<option value="'+i+'">'+z+'月</option>'
+ ).join("");
+
+$("dayFix").innerHTML='<option value="">自动推算</option>'
+ +Array.from({length:60},(_,i)=>
+  '<option value="'+i+'">'+G[i%10]+Z[i%12]+'</option>'
+ ).join("");
+
+for(let id of ["when","roll","monthFix","dayFix"]){
+ $(id).onchange=()=>{
+  if(current)generate();
+  else say("时间设置已更新。");
+ };
+}
+
+$("example").onclick=()=>{
+ values=[8,6,8,9,7,7];
+ coins=[null,null,null];
+ $("when").value="2026-10-21T00:21";
+ $("roll").value="0";
+ $("monthFix").value="";
+ $("dayFix").value="";
+ $("topic").value="事业";
+ $("loveMode").value="应";
+ $("question").value="";
+ detailReady=false;
+ renderInput();
+ generate();
+ say("已载入示例：天地否之风水涣。");
+};
+
+$("reset").onclick=()=>{
+ if(values.some(v=>v!=null)
+  &&!confirm("清空当前六爻，开始新的一卦？已保存的记录会保留。"))
+  return;
+ values=Array(6).fill(null);
+ coins=[null,null,null];
+ $("when").value=nowBeijing();
+ $("monthFix").value="";
+ $("dayFix").value="";
+ $("question").value="";
+ invalidate();
+ say("可以开始新的一卦。");
+ $("input").scrollIntoView({behavior:"smooth"});
+};
+
+function generate(){
+ try{
+  current=chart(
+   values,$("when").value,$("roll").value,
+   $("monthFix").value,$("dayFix").value
+  );
+  $("result").hidden=false;
+  renderResult();
+ }catch(e){say(e.message)}
+}
+
+$("generate").onclick=()=>{
+ detailReady=false;
+ generate();
+ if(current)$("result").scrollIntoView({behavior:"smooth"});
+};
+
+function renderResult(){
+ const c=current,h=HEX.get(c.m),b=HEX.get(c.b);
+ const bp=PAL.get(c.b),cal=c.cal;
+
+ $("baseTitle").textContent=title(c.m);
+ $("changeTitle").textContent=c.m===c.b
+  ?"无动爻 · 本卦不变":title(c.b);
+
+ $("baseMeta").textContent="第"+h.no+"卦 · "
+  +TRI[c.pal.t][0]+"宫"+E[c.p]+" · "+c.pal.label
+  +" · 世"+(c.shi+1)+"应"+(c.ying+1);
+
+ $("changeMeta").textContent="第"+b.no+"卦 · 独立查宫："
+  +TRI[bp.t][0]+"宫"+E[TRI[bp.t][2]]
+  +"，世"+(bp.shi+1)+"应"+((bp.shi+3)%6+1);
+
+ $("calendar").textContent=cal.year+"年　"+cal.month
+  +"月　"+cal.day+"日　"+cal.hour+"时　｜　旬空："
+  +cal.empty.map(i=>Z[i]).join("");
+
+ $("termWarning").hidden=!cal.nearTerm;
+
+ $("chartBody").innerHTML=[5,4,3,2,1,0].map(i=>{
+  let a=c.base[i],b=c.changed[i];
+  let sp=SH[(START[cal.ds]+i)%6];
+  let move=c.moving.includes(i);
+  let hide=c.hidden.filter(x=>x.i===i);
+
+  return '<tr><td title="'+SPIRIT[(START[cal.ds]+i)%6]
+   +'">'+sp+'</td><td>'+position(i)+'</td><td>'
+   +a.kin+'<br><small>'+a.label+'</small>'
+   +(hide.length?'<small class="hiddenSpirit">伏：'
+    +hide.map(x=>x.kin+x.label).join("、")+'</small>':"")
+   +'</td><td>'+lineHTML(c.v[i])+'</td><td><span class="'
+   +(i===c.shi?"badge":i===c.ying?"badge pale":"")+'">'
+   +(i===c.shi?"世":i===c.ying?"应":"")
+   +'</span></td><td class="move">'
+   +(move?(c.v[i]===6?"× →":"○ →"):"")
+   +'</td><td>'+lineHTML(transform(c.v)[i])
+   +'</td><td>'+b.kin+'<br><small>'+b.label
+   +'</small></td><td><small>'
+   +timing(a,cal).split("；")[0]+'</small></td></tr>';
+ }).join("");
+
+ $("simple").innerHTML=
+  '<p><b>本卦 · '+title(c.m)+'</b><br>'+h.meaning+'</p>'
+  +(c.m!==c.b
+   ?'<p><b>变卦 · '+title(c.b)+'</b><br>'+b.meaning
+    +' 这里表示可供思考的变化方向，不是已确定的结局。</p>'
+   :'<p>六爻皆静，先从当前结构与所问事情的现实条件理解，'
+    +'不等于事情永远不变。</p>')
+  +'<p><b>动爻</b>　'
+  +(c.moving.length?c.moving.map(position).join("、"):"无")
+  +'。</p><p class="note">'+readingRule(c)
+  +' 这是朱熹一系的常见读法；六爻纳甲另看生克。'
+  +'本页白话提示为编写的概述，并非原典爻辞。</p>'
+  +'<div class="links"><a target="_blank" '
+  +'rel="noopener noreferrer" '
+  +'href="https://www.eee-learning.com/book/eee'+h.no
+  +'">阅读本卦原典 ↗</a>'
+  +'<a target="_blank" rel="noopener noreferrer" '
+  +'href="https://www.eee-learning.com/book/eee'+b.no
+  +'">阅读变卦原典 ↗</a></div>';
+
+ renderDetail();
+}
+
+function targetRows(c,topic,mode){
+ let target=TOPICS[topic].target;
+ if(topic==="感情")target=mode;
+
+ if(target==="应")
+  return {target:"应爻",rows:[c.base[c.ying]],hidden:false};
+ if(target==="世")
+  return {target:"世爻",rows:[c.base[c.shi]],hidden:false};
+
+ let rows=c.base.filter(x=>x.kin===target),hidden=false;
+ if(!rows.length){
+  rows=c.hidden.filter(x=>x.kin===target);
+  hidden=true;
+ }
+ return {target,rows,hidden};
+}
+
+function detailed(c,topic,mode){
+ let t=TOPICS[topic];
+ let focus=targetRows(c,topic,mode);
+ let s=c.base[c.shi],a=c.base[c.ying];
+ let pair=branchRelation(s.z,a.z),out=[];
+
+ out.push([
+  "问事取用",
+  topic+"：本次以"+focus.target+"为观察重点，取象为"
+  +(topic==="感情"&&mode!=="应"?"所选伴侣角色":t.meaning)
+  +"。这是简化取用；具体问法可能改变用神。"
+ ]);
+
+ let located=focus.rows.map(x=>
+  position(x.i)+" "+x.kin+x.label
+ ).join("；");
+
+ out.push([
+  "用神位置",
+  focus.rows.length
+   ?(focus.hidden?"本卦明爻未现此六亲，查本宫伏神：":"本卦所见：")
+    +located+"。"
+    +(focus.hidden
+     ?"伏藏只是一种结构，不能由此断定没有机会。"
+     :focus.rows.length>1
+      ?"同类爻多现需分别辨认，不能把数量对应为现实人数或机会数。"
+      :"")
+   :"本次未能定位，需结合具体问题另行取用。"
+ ]);
+
+ out.push([
+  "世应关系",
+  "世在"+position(c.shi)+"，"+s.kin+s.label
+  +"；应在"+position(c.ying)+"，"+a.kin+a.label
+  +"。五行关系为"+relation(s.e,a.e)
+  +(pair?"，地支"+pair:"")
+  +"。世代表自身，应代表对方或外部；"
+  +"这些关系不能直接当作人物性格、感情或成功率。"
+ ]);
+
+ let movingText=c.moving.map(i=>{
+  let x=c.base[i],y=c.changed[i],tags=[];
+  if(mod(y.e+1,5)===x.e)tags.push("回头生");
+  if(mod(y.e+2,5)===x.e)tags.push("回头克");
+  if(HE[x.z]===y.z)tags.push("化合");
+  if(mod(x.z-y.z,12)===6)tags.push("化冲");
+  if(c.cal.empty.includes(y.z))tags.push("化旬空");
+
+  return position(i)+"："+x.kin+x.label+" → "+y.kin+y.label
+   +(tags.length?"（"+tags.join("、")+"）":"")
+   +"。爻位提示："+STAGE[i]+"。";
+ }).join("\n");
+
+ out.push([
+  "动爻与变化",
+  movingText||"本次无动爻。以静态世应、用神和日月条件为观察起点。"
+ ]);
+
+ const officers=c.moving.filter(i=>c.base[i].kin==="官鬼");
+ if(topic==="事业"&&officers.length>1){
+  out.push([
+   "多个官鬼发动",
+   "本卦有"+officers.length+"个官鬼动爻，位置为"
+   +officers.map(position).join("、")
+   +"。可以分别考察不同的职位条件、责任或压力；"
+   +"不能直接指定一个为考公、另一个为企业，"
+   +"更不能断为多份录用。"
+   +(officers.every(i=>c.changed[i].kin==="父母")
+    ?"这些官鬼都化父母，可取职位与文书、资格、制度相联系的象；"
+     +"不等于必有编制或合同。":"")
+  ]);
+ }
+
+ out.push([
+  "日月与旬空",
+  focus.rows.map(x=>
+   position(x.i)+(focus.hidden?"伏神":"")
+   +"："+timing(x,c.cal)+"。"
+  ).join("\n")
+  +" 空、合、冲可能同时出现，需要综合判断；"
+  +"日冲不自动等于暗动，临月的旬空也不能简单按落空处理。"
+  +"本版不据单项标记定吉凶或应期。"
+ ]);
+
+ let sp=(START[c.cal.ds]+c.shi)%6;
+ out.push([
+  "六神辅助",
+  "世爻临"+SH[sp]+"，传统辅助意象为"+SPIRIT[sp]
+  +"。六神只是辅助描述，白虎不等于伤病，玄武不等于欺骗；"
+  +"不能凭名称断灾祸。"
+ ]);
+
+ out.push([
+  "合看两卦",
+  title(c.m)+"："+HEX.get(c.m).meaning
+  +(c.m!==c.b?"\n变为"+title(c.b)+"："+HEX.get(c.b).meaning:"")
+  +"\n"+t.advice
+ ]);
+ return out;
+}
+
+function renderDetail(){
+ $("loveField").hidden=$("topic").value!=="感情";
+ $("detail").hidden=!detailReady;
+ if(!current||!detailReady)return;
+
+ $("detail").innerHTML=detailed(
+  current,$("topic").value,$("loveMode").value
+ ).map(p=>
+  '<article><h3>'+p[0]+'</h3><p>'
+  +esc(p[1]).replace(/\n/g,"<br>")+'</p></article>'
+ ).join("");
+}
+
+$("analyze").onclick=()=>{
+ detailReady=true;
+ renderDetail();
+ $("detail").scrollIntoView({behavior:"smooth"});
+};
+$("topic").onchange=()=>{
+ detailReady=false;
+ renderDetail();
+};
+$("loveMode").onchange=()=>{
+ if(detailReady)renderDetail();
+};
+
+/* ---------- 复制、导出与本地历史 ---------- */
+
+function report(){
+ if(!current)return "";
+ let c=current;
+
+ return [
+  "观爻 · 六爻记录",
+  "北京时间："+$("when").value.replace("T"," ")
+   +"；换日："+($("roll").value==="23"?"23时":"0时"),
+  "自下而上："+values.map(n=>NAMES[n]+"("+n+")").join("、"),
+  title(c.m)+(c.m!==c.b?" → "+title(c.b):"（无变卦）"),
+  $("calendar").textContent,
+  $("baseMeta").textContent,
+  "问题类别："+$("topic").value,
+  "所问："+$("question").value,
+  ...[5,4,3,2,1,0].map(i=>
+   position(i)+" "+SH[(START[c.cal.ds]+i)%6]
+   +" "+c.base[i].kin+c.base[i].label
+   +(i===c.shi?" 世":"")+(i===c.ying?" 应":"")
+   +(c.moving.includes(i)
+    ?" 动→"+c.changed[i].kin+c.changed[i].label:"")
+  ),
+  "本卦："+HEX.get(c.m).meaning,
+  "变卦："+HEX.get(c.b).meaning,
+  readingRule(c),
+  ...(detailReady?detailed(
+   c,$("topic").value,$("loveMode").value
+  ).map(p=>p[0]+"\n"+p[1]):[]),
+  "规则式传统文化解读，不是确定的未来预测。"
+   +"月建为节气近似推算，交节附近请核对。"
+ ].join("\n\n");
+}
+
+$("copy").onclick=async()=>{
+ let text=report();
+ try{
+  if(!navigator.clipboard)throw Error();
+  await navigator.clipboard.writeText(text);
+  say("解卦记录已复制。");
+ }catch{
+  $("copyText").hidden=false;
+  $("copyText").value=text;
+  $("copyText").focus();
+  $("copyText").select();
+  say("请在下面的文本框中手动复制。");
+ }
+};
+
+$("download").onclick=()=>{
+ let u=URL.createObjectURL(
+  new Blob([report()],{type:"text/plain;charset=utf-8"})
+ );
+ let a=document.createElement("a");
+ a.href=u;
+ a.download="观爻-"+$("when").value.slice(0,10)+".txt";
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(u),10000);
+};
+
+const STORAGE="guanyao-v1";
+
+function validRecord(r){
+ return r&&Array.isArray(r.values)
+  &&r.values.length===6
+  &&r.values.every(n=>[6,7,8,9].includes(n))
+  &&typeof r.when==="string"
+  &&Object.prototype.hasOwnProperty.call(TOPICS,r.topic);
+}
+
+try{
+ let h=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+ history=Array.isArray(h)?h.filter(validRecord).slice(0,20):[];
+}catch{
+ say("此浏览器暂不可保存历史；起卦功能仍可使用。");
+}
+
+function renderHistory(){
+ $("history").innerHTML=history.length
+  ?history.map((r,i)=>
+   '<button class="historyItem" data-history="'+i+'">'
+   +'<b>'+title(mask(r.values))+'</b><small>'
+   +esc(r.when.replace("T"," "))+' · '+esc(r.topic)
+   +'</small></button>'
+  ).join("")
+  :'<p class="note">还没有保存的卦。记录只保存在本浏览器。</p>';
+}
+
+$("save").onclick=()=>{
+ if(!current)return;
+ let record={
+  values:[...values],
+  when:$("when").value,
+  roll:$("roll").value,
+  mm:$("monthFix").value,
+  dd:$("dayFix").value,
+  topic:$("topic").value,
+  mode:$("loveMode").value,
+  question:$("question").value.slice(0,500),
+  detail:detailReady
+ };
+ let next=[record,...history].slice(0,20);
+ try{
+  localStorage.setItem(STORAGE,JSON.stringify(next));
+  history=next;
+  renderHistory();
+  say("已保存到本浏览器，最多保留20卦。");
+ }catch{
+  say("无法保存：浏览器限制或存储空间不足。可下载文本保留。");
+ }
+};
+
+$("history").onclick=e=>{
+ let b=e.target.closest("[data-history]");
+ if(!b)return;
+ let r=history[Number(b.dataset.history)];
+
+ values=[...r.values];
+ coins=[null,null,null];
+ $("when").value=r.when;
+ $("roll").value=r.roll||"0";
+ $("monthFix").value=r.mm||"";
+ $("dayFix").value=r.dd||"";
+ $("topic").value=r.topic;
+ $("loveMode").value=["应","官鬼","妻财"].includes(r.mode)
+  ?r.mode:"应";
+ $("question").value=r.question||"";
+ detailReady=!!r.detail;
+
+ renderInput();
+ generate();
+ say("已恢复保存的记录。");
+ $("result").scrollIntoView({behavior:"smooth"});
+};
+
+$("clearHistory").onclick=()=>{
+ if(!history.length)return;
+ if(!confirm("删除本浏览器保存的全部卦例？"))return;
+ try{
+  localStorage.removeItem(STORAGE);
+  history=[];
+  renderHistory();
+  say("历史记录已清空。");
+ }catch{
+  say("无法删除当前浏览器记录。");
+ }
+};
+
+renderInput();
+renderHistory();
+renderDetail();
+</script>
+</body>
+</html>
